@@ -20,6 +20,8 @@ export class AppComponent {
         Validators.required
       ])]
     });
+
+    this.load();
   }
 
   add() {
@@ -27,6 +29,7 @@ export class AppComponent {
     const title = this.form.controls['title'].value;
     const id = this.todos.length + 1;
     this.todos.push(new Todo(id, title, false));
+    this.save();
     this.clear();
   }
 
@@ -42,14 +45,29 @@ export class AppComponent {
       this.todos.splice(index, 1);
       console.log(this.todos);
     }
+    this.save();
 
   }
 
   markAsDone(todo: Todo) {
     todo.done = true;
+    this.save();
   }
 
   markAsUndone(todo: Todo) {
     todo.done = false;
+    this.save();
+  }
+
+  save() {
+    const data = JSON.stringify(this.todos);
+    localStorage.setItem('todos', data);
+  }
+
+  load() {
+    const dataString = localStorage.getItem('todos')
+    this.todos = JSON.parse(dataString);
+
+
   }
 }
